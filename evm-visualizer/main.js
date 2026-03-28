@@ -55,11 +55,11 @@ async function boot() {
 
 // ─── Python bridge ──────────────────────────────────────────────────────────────
 
-function callPy(fn, hex) {
+function callPy(fn, text) {
     // Pass argument via globals to avoid any string-escaping issues.
-    pyodide.globals.set('_hex', hex);
+    pyodide.globals.set('_input', text);
     return JSON.parse(
-        pyodide.runPython(`import json; json.dumps(${fn}(_hex))`)
+        pyodide.runPython(`import json; json.dumps(${fn}(_input))`)
     );
 }
 
@@ -67,12 +67,12 @@ function callPy(fn, hex) {
 
 function run() {
     stopPlay();
-    const hex = el.input.value.trim();
-    if (!hex) return;
+    const text = el.input.value.trim();
+    if (!text) return;
 
     try {
-        disasm = callPy('disassemble', hex);
-        steps  = callPy('trace', hex);
+        disasm = callPy('parse', text);
+        steps  = callPy('trace', text);
     } catch (err) {
         alert(`EVM error:\n\n${err.message}`);
         return;
@@ -286,7 +286,7 @@ el.prevBtn.addEventListener('click', () => setStep(stepIndex - 1, 'backward'));
 el.nextBtn.addEventListener('click', () => setStep(stepIndex + 1, 'forward'));
 el.playBtn.addEventListener('click', togglePlay);
 el.resetBtn.addEventListener('click', () => { stopPlay(); setStep(0, 'forward'); });
-el.input.addEventListener('keydown', e => { if (e.key === 'Enter') run(); });
+el.input.addEventListener('keydown', e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) run(); });
 
 // ─── Utility ───────────────────────────────────────────────────────────────────
 

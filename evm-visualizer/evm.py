@@ -12,53 +12,53 @@
 # =============================================================================
 
 
-def disassemble(bytecode_hex: str) -> list:
+def parse(opcode_text: str) -> list:
     """
-    Parse raw bytecode and return a list of disassembled instructions.
+    Parse opcode assembly text into a list of instructions with byte offsets.
 
     Parameters
     ----------
-    bytecode_hex : str
-        Hex-encoded bytecode, with or without "0x" prefix.
-        e.g. "6005600301" or "0x6005600301"
+    opcode_text : str
+        One opcode per line, e.g.:
+            PUSH1 0x05
+            PUSH1 0x03
+            ADD
+        Lines starting with '#' and blank lines are ignored.
 
     Returns
     -------
     list of dict, ordered by PC, each with:
         pc   : int   — byte offset of this instruction in the bytecode
         op   : str   — opcode mnemonic, e.g. "PUSH1"
-        args : list  — operand bytes as hex strings, e.g. ["0x05"]
-                       empty list for opcodes with no immediate operand
-
-    Implementation hints
-    --------------------
-    1. Strip "0x" prefix; decode bytes with:  data = bytes.fromhex(hex_str)
-    2. Walk the bytes, looking up each byte in an OPCODES table
-    3. PUSH1–PUSH32 (0x60–0x7f) consume the following N bytes as an
-       immediate operand; advance pc by 1 + N
-    4. All other opcodes advance pc by 1
+        args : list  — operand tokens as strings, e.g. ["0x05"]
+                       empty list for opcodes with no operand
     """
-    # ── DUMMY DATA ────────────────────────────────────────────────────────────
-    # Represents:  PUSH1 5 | PUSH1 3 | ADD | PUSH1 2 | MUL | STOP
-    # i.e. (5 + 3) * 2 = 16 = 0x10
-    return [
-        {"pc": 0, "op": "PUSH1", "args": ["0x05"]},
-        {"pc": 2, "op": "PUSH1", "args": ["0x03"]},
-        {"pc": 4, "op": "ADD",   "args": []},
-        {"pc": 5, "op": "PUSH1", "args": ["0x02"]},
-        {"pc": 7, "op": "MUL",   "args": []},
-        {"pc": 8, "op": "STOP",  "args": []},
-    ]
+    PUSH_SIZES = {f'PUSH{n}': n for n in range(1, 33)}
+
+    instructions = []
+    pc = 0
+
+    for line in opcode_text.strip().splitlines():
+        line = line.strip()
+        if not line or line.startswith('#'):
+            continue
+        parts = line.split()
+        op    = parts[0].upper()
+        args  = parts[1:]
+        instructions.append({"pc": pc, "op": op, "args": args})
+        pc += 1 + PUSH_SIZES.get(op, 0)
+
+    return instructions
 
 
-def trace(bytecode_hex: str) -> list:
+def trace(opcode_text: str) -> list:
     """
-    Execute bytecode step-by-step and return an execution trace.
+    Execute opcode assembly text step-by-step and return an execution trace.
 
     Parameters
     ----------
-    bytecode_hex : str
-        Hex-encoded bytecode, with or without "0x" prefix.
+    opcode_text : str
+        Same format as accepted by parse() — one opcode per line.
 
     Returns
     -------
@@ -73,16 +73,13 @@ def trace(bytecode_hex: str) -> list:
 
     Implementation hints
     --------------------
-    1. Parse bytecode:  data = bytes.fromhex(bytecode_hex.removeprefix("0x"))
-    2. Initialise state: pc = 0, stack = [], gas = 10_000
-    3. Loop:
-         a. Read opcode byte at data[pc]
-         b. Dispatch to an opcode handler (add, push, pop, dup, swap, …)
-         c. Deduct gas for the opcode
-         d. Append a snapshot dict to the results list
-         e. Advance pc (remember PUSH1–PUSH32 skip extra bytes)
-    4. Stop on STOP (0x00), RETURN (0xf3), REVERT (0xfd),
-       or when pc >= len(data)
+    1. Call parse(opcode_text) to get the instruction list
+    2. Initialise state: stack = [], gas = 10_000
+    3. Loop over instructions:
+         a. Dispatch to an opcode handler (add, push, pop, dup, swap, …)
+         b. Deduct gas for the opcode
+         c. Append a snapshot dict to the results list
+    4. Stop on STOP, RETURN, REVERT, or end of instructions
     5. Represent stack values as lowercase hex with "0x" prefix:
          hex(value)  →  "0x5"   (Python built-in)
          or for zero-padded:  f"0x{value:064x}"  for 32-byte EVM words

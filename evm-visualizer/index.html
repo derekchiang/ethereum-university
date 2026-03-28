@@ -24,20 +24,24 @@
     <header>
         <h1>EVM Visualizer</h1>
         <span class="header-sub">Step through bytecode execution</span>
-        <span class="header-keys">← → step &nbsp;·&nbsp; space play/pause &nbsp;·&nbsp; r reset</span>
+        <span class="header-keys">← → step &nbsp;·&nbsp; space play/pause &nbsp;·&nbsp; r reset &nbsp;·&nbsp; ⌘↵ run</span>
     </header>
 
-    <!-- Bytecode input -->
+    <!-- Opcode input -->
     <div class="input-bar">
-        <label for="bytecode-input">Bytecode</label>
-        <input
+        <label for="bytecode-input">Opcodes</label>
+        <textarea
             id="bytecode-input"
-            type="text"
-            placeholder="0x6005600301…"
-            value="0x600560030160020200"
+            rows="5"
+            placeholder="PUSH1 0x05&#10;PUSH1 0x03&#10;ADD"
             spellcheck="false"
             autocomplete="off"
-        >
+        >PUSH1 0x05
+PUSH1 0x03
+ADD
+PUSH1 0x02
+MUL
+STOP</textarea>
         <button id="run-btn" class="btn-primary" disabled>Run</button>
     </div>
 
@@ -48,7 +52,7 @@
         <section class="panel" id="panel-bytecode">
             <h2 class="panel-title">Bytecode</h2>
             <ul id="bytecode-list" class="bytecode-list">
-                <li class="placeholder-msg">Enter bytecode above and click Run</li>
+                <li class="placeholder-msg">Enter opcodes above and click Run</li>
             </ul>
         </section>
 

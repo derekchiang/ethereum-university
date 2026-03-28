@@ -93,7 +93,7 @@ header h1 {
 /* ─── Input bar ────────────────────────────────────────────────────────────── */
 .input-bar {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 10px;
     padding: 8px 20px;
     border-bottom: 1px solid var(--border);
@@ -105,8 +105,9 @@ header h1 {
     white-space: nowrap;
     text-transform: uppercase;
     letter-spacing: 0.07em;
+    padding-top: 6px;
 }
-.input-bar input {
+.input-bar textarea {
     flex: 1;
     background: var(--bg-panel);
     border: 1px solid var(--border);
@@ -114,15 +115,21 @@ header h1 {
     color: var(--text);
     font-family: var(--font);
     font-size: 13px;
+    line-height: 1.6;
     padding: 5px 10px;
     outline: none;
+    resize: vertical;
     transition: border-color 0.15s;
 }
-.input-bar input:focus {
+.input-bar textarea:focus {
     border-color: var(--accent);
 }
-.input-bar input::placeholder {
+.input-bar textarea::placeholder {
     color: var(--muted);
+}
+.input-bar button {
+    flex-shrink: 0;
+    margin-top: 1px;
 }
 
 /* ─── Panels ───────────────────────────────────────────────────────────────── */
