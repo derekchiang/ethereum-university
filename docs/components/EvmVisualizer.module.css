@@ -1,0 +1,242 @@
+/* ── Widget shell ──────────────────────────────────────────────────────────── */
+.widget {
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
+  font-size: 13px;
+  color: #c9d1d9;
+  overflow: hidden;
+  margin: 24px 0;
+}
+
+/* ── Edit mode ─────────────────────────────────────────────────────────────── */
+.editWrapper {
+  display: flex;
+  flex-direction: column;
+  padding: 14px;
+  gap: 10px;
+}
+
+.textarea {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: #c9d1d9;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.75;
+  padding: 0;
+  outline: none;
+  resize: none;
+  caret-color: #58a6ff;
+}
+
+.textarea::placeholder {
+  color: #8b949e;
+}
+
+.editBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #30363d;
+  padding-top: 10px;
+}
+
+.statusMsg { font-size: 11px; color: #8b949e; }
+.errorMsg  { font-size: 11px; color: #f85149; }
+
+/* ── Run mode ──────────────────────────────────────────────────────────────── */
+.runLayout {
+  display: flex;
+  flex-direction: column;
+  height: 320px;
+}
+
+.columns {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+/* ── Instruction column ────────────────────────────────────────────────────── */
+.instrCol {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #30363d;
+  overflow: hidden;
+}
+
+.colHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #8b949e;
+  border-bottom: 1px solid #30363d;
+  flex-shrink: 0;
+}
+
+.instrList {
+  list-style: none;
+  overflow-y: auto;
+  flex: 1;
+  padding: 4px 0;
+  margin: 0;
+}
+
+.instrRow {
+  display: grid;
+  grid-template-columns: 52px 70px 1fr;
+  gap: 0 8px;
+  padding: 4px 12px;
+  border-left: 2px solid transparent;
+  cursor: default;
+  user-select: none;
+  line-height: 1.6;
+}
+
+.instrActive {
+  background: rgba(56, 139, 253, 0.1);
+  border-left-color: #58a6ff !important;
+}
+
+.instrPc   { color: #8b949e; }
+.instrOp   { color: #79c0ff; }
+.instrArgs { color: #ffa657; }
+
+/* ── Stack column ──────────────────────────────────────────────────────────── */
+.stackCol {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.stackList {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stackEmpty {
+  color: #8b949e;
+  font-size: 11px;
+  text-align: center;
+  padding-top: 12px;
+}
+
+.stackItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 4px;
+  padding: 5px 10px;
+}
+
+.stackPos {
+  font-size: 10px;
+  color: #8b949e;
+  min-width: 22px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.stackVal {
+  font-size: 12px;
+  word-break: break-all;
+  flex: 1;
+}
+
+.stackEnterFwd { animation: enterFwd 0.25s ease-out, greenPulse 0.55s ease-out; }
+.stackEnterBwd { animation: enterBwd 0.25s ease-out, bluePulse  0.45s ease-out; }
+
+/* ── Controls ──────────────────────────────────────────────────────────────── */
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-top: 1px solid #30363d;
+  flex-shrink: 0;
+}
+
+.stepCount {
+  font-size: 12px;
+  color: #8b949e;
+  min-width: 48px;
+  text-align: center;
+}
+
+/* ── Buttons ───────────────────────────────────────────────────────────────── */
+.btnPrimary {
+  background: #58a6ff;
+  color: #000;
+  border: none;
+  border-radius: 5px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 16px;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.btnPrimary:hover:not(:disabled) { background: #79c0ff; }
+.btnPrimary:disabled { opacity: 0.38; cursor: not-allowed; }
+
+.btnStop { background: #f85149 !important; color: #fff !important; }
+
+.btnGhost {
+  background: transparent;
+  border: 1px solid #30363d;
+  border-radius: 5px;
+  color: #c9d1d9;
+  font-family: inherit;
+  font-size: 12px;
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: border-color 0.12s, background 0.12s;
+}
+.btnGhost:hover:not(:disabled) { background: rgba(255,255,255,0.05); border-color: #8b949e; }
+.btnGhost:disabled { opacity: 0.35; cursor: not-allowed; }
+
+/* ── Animations ────────────────────────────────────────────────────────────── */
+@keyframes enterFwd {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes enterBwd {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes greenPulse {
+  0%   { background-color: #1a3a24; border-color: #3fb950; }
+  100% { background-color: #161b22; border-color: #30363d; }
+}
+
+@keyframes bluePulse {
+  0%   { background-color: #0d2033; border-color: #58a6ff; }
+  100% { background-color: #161b22; border-color: #30363d; }
+}
+
+/* ── Scrollbar ─────────────────────────────────────────────────────────────── */
+.instrList::-webkit-scrollbar,
+.stackList::-webkit-scrollbar { width: 4px; }
+.instrList::-webkit-scrollbar-track,
+.stackList::-webkit-scrollbar-track { background: transparent; }
+.instrList::-webkit-scrollbar-thumb,
+.stackList::-webkit-scrollbar-thumb { background: #30363d; border-radius: 2px; }

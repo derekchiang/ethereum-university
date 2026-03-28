@@ -1,0 +1,86 @@
+---
+title: 'Chapter 1: How the EVM Works'
+description: A ground-up explanation of the Ethereum Virtual Machine.
+---
+
+import { Callout } from 'vocs/components'
+import EvmVisualizer from '../components/EvmVisualizer'
+
+# Chapter 1: How the EVM Works
+
+The Ethereum Virtual Machine — the EVM — is the runtime that executes every
+smart contract on Ethereum. Every node in the network runs an identical copy
+of it, and because it is fully deterministic, every node arrives at exactly
+the same result for every transaction. That shared determinism is what lets
+thousands of strangers agree on a single global state without trusting one
+another.
+
+## A stack machine
+
+The EVM is a **stack machine**. Instead of reading from and writing to named
+registers (the way a CPU does), every operation works against a last-in,
+first-out stack. An instruction pops its inputs from the top of the stack and
+pushes its result back onto the top.
+
+The stack can hold up to **1,024 items**. Each item is a **256-bit (32-byte)
+unsigned integer** — wide enough to hold a full Ethereum address or a
+Keccak-256 hash without any padding.
+
+## Opcodes
+
+Each instruction in the EVM is a single byte called an **opcode**. The EVM
+defines 140-odd opcodes covering arithmetic, bitwise logic, comparisons,
+hashing, memory access, storage reads and writes, control flow, and more.
+
+A few examples:
+
+| Opcode | Hex  | What it does |
+| ------ | ---- | ------------ |
+| `PUSH1` | `0x60` | Pushes one byte onto the stack |
+| `ADD`   | `0x01` | Pops two values, pushes their sum |
+| `MUL`   | `0x02` | Pops two values, pushes their product |
+| `DUP1`  | `0x80` | Duplicates the top stack item |
+| `SSTORE`| `0x55` | Pops a key and a value, writes to persistent storage |
+| `STOP`  | `0x00` | Halts execution |
+
+Arithmetic wraps at 2²⁵⁶ — there is no overflow error, values simply wrap
+around to zero.
+
+## The program counter
+
+The EVM keeps a **program counter (PC)** that points to the next byte to
+execute. After each instruction the PC advances past that instruction's bytes
+(some opcodes, like `PUSH1`, are followed by an immediate operand byte, so the
+PC skips ahead by two). Jump instructions (`JUMP`, `JUMPI`) let the program
+set the PC explicitly, enabling loops and conditionals.
+
+## Gas
+
+Every opcode costs a fixed amount of **gas**. The caller must pre-fund the
+transaction with enough gas or execution reverts (without consuming all gas in
+newer EIPs). This prevents infinite loops and makes resource consumption
+explicit and market-priced.
+
+---
+
+## Try it
+
+The visualizer below lets you write EVM opcodes and step through their
+execution one instruction at a time. The left panel shows the instruction
+list; the right panel shows the stack after each step.
+
+<Callout type="tip">
+  Try editing the opcodes, then click **Run →** to start stepping.
+  Use **← Prev** and **Next →** (or your arrow keys) to move through
+  the trace.
+</Callout>
+
+<EvmVisualizer />
+
+---
+
+## What's next
+
+In Chapter 2 we will look at **memory** and **storage** — the two other data
+regions the EVM can read from and write to — and see how Solidity maps its
+variables onto them.
