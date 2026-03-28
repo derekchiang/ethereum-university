@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EVM Visualizer</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Pyodide 0.29.3 — Python runtime via WebAssembly -->
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.29.3/full/pyodide.js"></script>
+    <!-- GSAP 3.14.2 — animation library -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+</head>
+<body>
+
+    <!-- Loading overlay (visible until Pyodide is ready) -->
+    <div id="loading-overlay">
+        <div class="loading-box">
+            <div class="spinner"></div>
+            <p id="loading-text">Loading Python runtime…</p>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <h1>EVM Visualizer</h1>
+        <span class="header-sub">Step through bytecode execution</span>
+        <span class="header-keys">← → step &nbsp;·&nbsp; space play/pause &nbsp;·&nbsp; r reset</span>
+    </header>
+
+    <!-- Bytecode input -->
+    <div class="input-bar">
+        <label for="bytecode-input">Bytecode</label>
+        <input
+            id="bytecode-input"
+            type="text"
+            placeholder="0x6005600301…"
+            value="0x600560030160020200"
+            spellcheck="false"
+            autocomplete="off"
+        >
+        <button id="run-btn" class="btn-primary" disabled>Run</button>
+    </div>
+
+    <!-- Three-panel visualization -->
+    <main class="panels">
+
+        <!-- Left: disassembled instructions -->
+        <section class="panel" id="panel-bytecode">
+            <h2 class="panel-title">Bytecode</h2>
+            <ul id="bytecode-list" class="bytecode-list">
+                <li class="placeholder-msg">Enter bytecode above and click Run</li>
+            </ul>
+        </section>
+
+        <!-- Centre: stack -->
+        <section class="panel" id="panel-stack">
+            <h2 class="panel-title">Stack</h2>
+            <div id="stack-container" class="stack-container">
+                <div class="stack-empty">—</div>
+            </div>
+        </section>
+
+        <!-- Right: execution info -->
+        <section class="panel" id="panel-info">
+            <h2 class="panel-title">Execution</h2>
+            <div class="info-grid">
+                <div class="info-row">
+                    <span class="info-label">Step</span>
+                    <span id="step-counter" class="info-value">—</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Opcode</span>
+                    <span id="info-opcode" class="info-value info-opcode">—</span>
+                </div>
+                <hr class="info-divider">
+                <div class="info-row">
+                    <span class="info-label">Gas used</span>
+                    <span id="info-gas-used" class="info-value">—</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Gas left</span>
+                    <span id="info-gas-remaining" class="info-value">—</span>
+                </div>
+                <hr class="info-divider">
+                <div class="info-row">
+                    <span class="info-label">Stack depth</span>
+                    <span id="info-stack-depth" class="info-value">—</span>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Step controls -->
+    <div class="controls">
+        <button id="reset-btn" class="btn-ghost" disabled>↺ Reset</button>
+        <button id="prev-btn" class="btn-ghost" disabled>← Prev</button>
+        <button id="play-btn" class="btn-primary" disabled>▶ Play</button>
+        <button id="next-btn" class="btn-ghost" disabled>Next →</button>
+    </div>
+
+    <script type="module" src="main.js"></script>
+</body>
+</html>
