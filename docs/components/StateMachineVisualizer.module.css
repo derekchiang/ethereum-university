@@ -1,0 +1,222 @@
+/* ── Widget shell ──────────────────────────────────────────────────────────── */
+.widget {
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
+  font-size: 13px;
+  color: #c9d1d9;
+  overflow: hidden;
+  margin: 24px 0;
+}
+
+/* ── Formula header ────────────────────────────────────────────────────────── */
+.formula {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border-bottom: 1px solid #30363d;
+  font-size: 12px;
+  gap: 2px;
+}
+
+.formulaS  { color: #79c0ff; font-weight: 600; }
+.formulaI  { color: #ffa657; font-weight: 600; }
+.formulaOp { color: #8b949e; }
+
+/* ── Top row ───────────────────────────────────────────────────────────────── */
+.topRow {
+  display: flex;
+  border-bottom: 1px solid #30363d;
+}
+
+/* ── Panels ────────────────────────────────────────────────────────────────── */
+.panel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.panel + .panel {
+  border-left: 1px solid #30363d;
+}
+
+.panelHeader {
+  padding: 6px 12px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #8b949e;
+  border-bottom: 1px solid #30363d;
+  flex-shrink: 0;
+}
+
+/* ── World State ───────────────────────────────────────────────────────────── */
+.accountList {
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.accountRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 4px;
+  padding: 6px 10px;
+}
+
+.accountName    { color: #79c0ff; }
+.accountBalance { color: #c9d1d9; }
+
+.accountFlash {
+  animation: accountFade 0.2s ease-out, greenPulse 0.7s ease-out;
+}
+
+/* ── Input panel ───────────────────────────────────────────────────────────── */
+.inputContent {
+  padding: 10px 12px;
+}
+
+.blockCard {
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 4px;
+  padding: 8px 10px;
+}
+
+.blockNum {
+  font-size: 10px;
+  font-weight: 600;
+  color: #8b949e;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.txRow {
+  color: #ffa657;
+  font-size: 12px;
+  line-height: 1.75;
+}
+
+.blockProcessing {
+  animation: processPulse 0.35s ease-in-out;
+}
+
+.noMore {
+  color: #8b949e;
+  font-size: 12px;
+  padding: 8px 0;
+  text-align: center;
+}
+
+/* ── History ───────────────────────────────────────────────────────────────── */
+.historySection {
+  padding: 10px 12px;
+  border-bottom: 1px solid #30363d;
+}
+
+.historyLabel {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #8b949e;
+  margin-bottom: 8px;
+}
+
+.historyChain {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.histBlock {
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 12px;
+  color: #c9d1d9;
+}
+
+.histBlockNew {
+  animation: histEnter 0.25s ease-out, bluePulse 0.55s ease-out;
+}
+
+.chainArrow {
+  color: #8b949e;
+  font-size: 12px;
+}
+
+/* ── Controls ──────────────────────────────────────────────────────────────── */
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 8px 12px;
+}
+
+/* ── Buttons ───────────────────────────────────────────────────────────────── */
+.btnPrimary {
+  background: #58a6ff;
+  color: #000;
+  border: none;
+  border-radius: 5px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 16px;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.btnPrimary:hover:not(:disabled) { background: #79c0ff; }
+.btnPrimary:disabled { opacity: 0.38; cursor: not-allowed; }
+
+.btnGhost {
+  background: transparent;
+  border: 1px solid #30363d;
+  border-radius: 5px;
+  color: #c9d1d9;
+  font-family: inherit;
+  font-size: 12px;
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: border-color 0.12s, background 0.12s;
+}
+.btnGhost:hover { background: rgba(255,255,255,0.05); border-color: #8b949e; }
+
+/* ── Animations ────────────────────────────────────────────────────────────── */
+@keyframes accountFade {
+  from { opacity: 0.4; }
+  to   { opacity: 1; }
+}
+
+@keyframes greenPulse {
+  0%   { background-color: #1a3a24; border-color: #3fb950; }
+  100% { background-color: #161b22; border-color: #30363d; }
+}
+
+@keyframes histEnter {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes bluePulse {
+  0%   { background-color: #0d2033; border-color: #58a6ff; }
+  100% { background-color: #161b22; border-color: #30363d; }
+}
+
+@keyframes processPulse {
+  0%   { opacity: 1; }
+  50%  { opacity: 0.45; }
+  100% { opacity: 1; }
+}

@@ -1,17 +1,36 @@
----
-layout: minimal
-showLogo: false
----
+# Introduction: Ethereum from 50,000 feet
 
-import { HomePage } from 'vocs/components'
+Ethereum is a verifiable, permissionless, and decentralized computer.
 
-<HomePage.Root>
-  <HomePage.Tagline>Ethereum University</HomePage.Tagline>
-  <HomePage.Description>
-    A from-scratch guide to how Ethereum works — starting with the EVM,
-    working up through accounts, transactions, consensus, and beyond.
-  </HomePage.Description>
-  <HomePage.Buttons>
-    <HomePage.Button href="/chapter-1" variant="accent">Start Reading</HomePage.Button>
-  </HomePage.Buttons>
-</HomePage.Root>
+- Verfiable: you can verify the output of your input to Ethereum.
+- Permissionless: anyone with an internet connection can use Ethereum.
+- Decentralized: the computer is powered by a network of nodes across the globe, and so long as a large enough portion of the nodes are running, the computer will continue to function.
+
+Let's zoom out and compare Ethereum with other computing platforms in order to understand why these two properties make Ethereum unique.
+
+## Ethereum vs AWS
+
+AWS is not veriable -- users who use Twitter have no way to now how Twitter processes and recommends its tweets.
+
+AWS is not permissionless -- not everyone is allowed to use it.
+
+AWS is not decentralized -- if Amazon shuts down, AWS is gone.
+
+## What applications benefit from these properties?
+
+- Finance
+  - Money
+    - Store of value (ETH)
+    - Medium of exchange (stablecoins)
+  - Exchanges
+    - Spot
+    - Perpetuals
+
+- Information markets
+  - Prediction markets
+
+## Next Step
+
+Now that we have a high-level overview of what Ethereum is and what it's useful for, let's dive into how it works.
+
+To begin with, we will visit Ethereum as an *state machine* -- an abstract machine whose state changes in response to inputs.

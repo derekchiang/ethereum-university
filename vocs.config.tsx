@@ -6,9 +6,9 @@ export default defineConfig({
   sidebar: [
     { text: 'Introduction', link: '/' },
     {
-      text: 'Part I — The EVM',
+      text: 'Part I — The State Transition Function (STF)',
       items: [
-        { text: 'Chapter 1: How the EVM Works', link: '/chapter-1' },
+        { text: 'Chapter 1: Ethereum as an Abstract Machine', link: '/chapter-1' },
       ],
     },
   ],
