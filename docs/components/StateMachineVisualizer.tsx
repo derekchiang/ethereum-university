@@ -84,35 +84,59 @@ export default function StateMachineVisualizer() {
 
       {/* Formula header */}
       <div className={styles.formula}>
+        <span className={styles.formulaOp}>STF(</span>
         <span className={styles.formulaS}>S</span>
-        <span className={styles.formulaOp}> + </span>
+        <span className={styles.formulaOp}>, </span>
         <span className={styles.formulaI}>I</span>
-        <span className={styles.formulaOp}> ──── STF ────→ </span>
+        <span className={styles.formulaOp}>) → </span>
         <span className={styles.formulaS}>S′</span>
       </div>
 
-      {/* Top row: World State | Input */}
-      <div className={styles.topRow}>
+      {/* Main row: State (S) | Input (I) */}
+      <div className={styles.mainRow}>
 
-        {/* World State */}
-        <div className={styles.panel}>
-          <div className={styles.panelHeader}>World State</div>
-          <div className={styles.accountList}>
-            {Object.entries(worldState).map(([name, balance]) => (
-              <div
-                key={`${name}-v${animVer}`}
-                className={`${styles.accountRow}${changed.has(name) ? ' ' + styles.accountFlash : ''}`}
-              >
-                <span className={styles.accountName}>{name}</span>
-                <span className={styles.accountBalance}>{balance} ETH</span>
-              </div>
-            ))}
+        {/* Left: State (S) = World State + History */}
+        <div className={styles.statePanel}>
+          <div className={styles.panelHeader}>
+            State&nbsp;<span className={styles.panelTag}>(S)</span>
+          </div>
+
+          <div className={styles.subSection}>
+            <div className={styles.subHeader}>World State</div>
+            <div className={styles.accountList}>
+              {Object.entries(worldState).map(([name, balance]) => (
+                <div
+                  key={`${name}-v${animVer}`}
+                  className={`${styles.accountRow}${changed.has(name) ? ' ' + styles.accountFlash : ''}`}
+                >
+                  <span className={styles.accountName}>{name}</span>
+                  <span className={styles.accountBalance}>{balance} ETH</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className={styles.subSection}>
+            <div className={styles.subHeader}>History</div>
+            <div className={styles.historyChain}>
+              <div className={styles.histBlock}>Genesis</div>
+              {history.map((num) => (
+                <Fragment key={num}>
+                  <span className={styles.chainArrow}>→</span>
+                  <div className={`${styles.histBlock}${latestBlock === num ? ' ' + styles.histBlockNew : ''}`}>
+                    #{num}
+                  </div>
+                </Fragment>
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Input block */}
-        <div className={styles.panel}>
-          <div className={styles.panelHeader}>Input</div>
+        {/* Right: Input (I) */}
+        <div className={styles.inputPanel}>
+          <div className={styles.panelHeader}>
+            Input&nbsp;<span className={styles.panelTag}>(I)</span>
+          </div>
           <div className={styles.inputContent}>
             {nextBlock ? (
               <div className={`${styles.blockCard}${processing ? ' ' + styles.blockProcessing : ''}`}>
@@ -127,22 +151,6 @@ export default function StateMachineVisualizer() {
           </div>
         </div>
 
-      </div>
-
-      {/* History */}
-      <div className={styles.historySection}>
-        <div className={styles.historyLabel}>History</div>
-        <div className={styles.historyChain}>
-          <div className={styles.histBlock}>Genesis</div>
-          {history.map((num) => (
-            <Fragment key={num}>
-              <span className={styles.chainArrow}>→</span>
-              <div className={`${styles.histBlock}${latestBlock === num ? ' ' + styles.histBlockNew : ''}`}>
-                #{num}
-              </div>
-            </Fragment>
-          ))}
-        </div>
       </div>
 
       {/* Controls */}
