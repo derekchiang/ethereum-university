@@ -1,0 +1,35 @@
+import BinaryTreeVisualizer from '../components/BinaryTreeVisualizer'
+
+# Chapter 2: The World State
+
+The part of the Ethereum state that people most commonly associate with "state" is called the World State.
+
+Most people really just call it the state and refer to the history as a distinct component, but as we saw earlier, history is part of the state if we were to view Ethereum as a state machine, since history can affect the state transition.
+
+However, to be consistent with common terminology used in the space, we will simply call the World State the state from now on, and refer to history distinctly.  Just keep in mind that in fact, the history is part of the state and the state is World State + History.
+
+## The three forms of state
+
+One tricky thing to understand about the Ethereum state is that it can be represented in three forms, and it's a common source of confusion in Ethereum discourse when people are talking about state but they are actually talking about different forms.
+
+The three forms are:
+
+- The logical form
+- The operational form
+- The commitment form
+
+We will focus on the logical and the commitment form, since the operational form differs by client implementation.
+
+## Binary State Tree (EIP-7864)
+
+Ethereum is moving toward a new binary tree structure to replace the current hexary Merkle Patricia Trie. The full proposal is described in [EIP-7864](https://eips.ethereum.org/EIPS/eip-7864).
+
+The core idea: keys are 32 bytes, where the first 31 bytes form the *stem* and the last byte is the *subindex*. All 256 values sharing the same stem live in one `StemNode`. The path through the tree is determined bit-by-bit (MSB first) by the stem, with `InternalNode`s branching left (0) or right (1) at each level.
+
+When two stems need to coexist, one `InternalNode` is created for **each bit of their shared prefix**, plus one final `InternalNode` where they diverge. This is in contrast to the MPT, which uses extension nodes to skip over shared-prefix bits in a single hop. The binary tree avoids extension nodes entirely — every level is a simple two-way branch — which makes it simpler to implement in ZK circuits.
+
+The visualization below walks through five insertions. Click **Next** to begin inserting a key, then **Step** through each recursive call, and **Apply** to commit the result.
+
+> Stems here are 1 byte (8 bits) for visual clarity. EIP-7864 uses 31-byte stems — the algorithm is identical.
+
+<BinaryTreeVisualizer />

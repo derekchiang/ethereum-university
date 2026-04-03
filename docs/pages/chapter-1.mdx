@@ -18,6 +18,10 @@ Therefore, to understand Ethereum in its abstract form, you really just need to 
 - What does the input look like?
 - How does the state transition function actually operate?
 
+The following visualization puts it all together:
+
+<StateMachineVisualizer />
+
 ## The state of Ethereum
 
 The state of Ethereum is a combination of two things:
@@ -36,6 +40,12 @@ The STF does two things:
 - Update the world state by applying the block.
 - Append the block to the history.
 
-<StateMachineVisualizer />
+## Next step
 
-You will notice that, in this whole treatise, we have not yet mentioned the word "blockchain," or even "block" or "chain."  This is because 
+Now that we know from a high level how the Ethereum STF works, let's dive into a specific component -- the world state.
+
+We will first explain what the world state consists of.
+
+We now explain how the world state relates to the block and the history.  Basically, the world state is hashed into a "state root" that is stored in the block.
+
+We then explain how the STF modifies the state using a transaction.  This allows us to dive into the EVM.
