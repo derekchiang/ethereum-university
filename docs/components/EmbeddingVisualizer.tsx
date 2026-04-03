@@ -259,25 +259,36 @@ export default function EmbeddingVisualizer() {
       {(storageStems.length > 0 || codeStems.length > 0) && (
         <div className={styles.overflowSection}>
           <div className={styles.overflowTitle}>Overflow Stems</div>
+          <p className={styles.overflowExplain}>
+            The header stem only has 64 storage slots (0x40–0x7F) and 128 code chunk slots
+            (0x80–0xFF). Once those fill up, the remaining data must live on a <em>new stem</em>{' '}
+            derived from the same address. Each overflow stem holds up to 256 values.
+          </p>
           <div className={styles.overflowList}>
             {storageStems.map((s, i) => (
               <div key={`s${i}`} className={`${styles.overflowStem} ${styles.overflowStemStorage}`}>
-                <span className={styles.overflowTag}>Storage</span>
-                <span className={styles.overflowRange}>slots {s.start}–{s.end}</span>
-                <span className={styles.overflowCount}>{s.end - s.start + 1} filled</span>
-                <span className={styles.overflowKey}>
-                  tree_hash(addr ∥ (MAIN_STORAGE_OFFSET + {s.start}))[0:31]
-                </span>
+                <div className={styles.overflowStemTop}>
+                  <span className={styles.overflowTag}>Storage overflow #{i + 1}</span>
+                  <span className={styles.overflowRange}>slots {s.start}–{s.end}</span>
+                  <span className={styles.overflowCount}>({s.end - s.start + 1} slots)</span>
+                </div>
+                <div className={styles.overflowFormula}>
+                  stem = tree_hash(addr ∥ (MAIN_STORAGE_OFFSET + {s.start}))[0:31]
+                </div>
               </div>
             ))}
             {codeStems.map((s, i) => (
               <div key={`c${i}`} className={`${styles.overflowStem} ${styles.overflowStemCode}`}>
-                <span className={styles.overflowTag}>Code</span>
-                <span className={styles.overflowRange}>chunks {s.start}–{s.end}</span>
-                <span className={styles.overflowCount}>{s.end - s.start + 1} filled</span>
-                <span className={styles.overflowKey}>
-                  tree_hash(addr ∥ {s.treeIndex})[0:31]
-                </span>
+                <div className={styles.overflowStemTop}>
+                  <span className={styles.overflowTag}>Code overflow #{i + 1}</span>
+                  <span className={styles.overflowRange}>chunks {s.start}–{s.end}</span>
+                  <span className={styles.overflowCount}>({s.end - s.start + 1} chunks)</span>
+                </div>
+                <div className={styles.overflowFormula}>
+                  stem = tree_hash(addr ∥ {s.treeIndex})[0:31]
+                  {'  '}
+                  <span className={styles.overflowFormulaNote}>(tree_index = {s.treeIndex})</span>
+                </div>
               </div>
             ))}
           </div>
@@ -286,13 +297,33 @@ export default function EmbeddingVisualizer() {
 
       {/* Controls */}
       <div className={styles.controls}>
-        <button className={styles.btnGhost} onClick={reset}>Reset</button>
-        <button className={styles.btnStorage} onClick={() => setStorageCount(c => c + 8)}>
-          + Storage ×8
-        </button>
-        <button className={styles.btnCode} onClick={() => setCodeCount(c => c + 16)}>
-          + Code ×16
-        </button>
+        <div className={styles.capacityGroup}>
+          <span className={styles.capacityLabel}>storage</span>
+          <span className={storageCount > 64 ? styles.capacityFull : styles.capacityVal}>
+            {Math.min(storageCount, 64)} / 64
+          </span>
+          {storageOverflow > 0 && (
+            <span className={styles.capacitySpill}>+{storageOverflow} overflow</span>
+          )}
+        </div>
+        <div className={styles.capacityGroup}>
+          <span className={styles.capacityLabel}>code</span>
+          <span className={codeCount > 128 ? styles.capacityFull : styles.capacityVal}>
+            {Math.min(codeCount, 128)} / 128
+          </span>
+          {codeOverflow > 0 && (
+            <span className={styles.capacitySpill}>+{codeOverflow} overflow</span>
+          )}
+        </div>
+        <div className={styles.controlsBtns}>
+          <button className={styles.btnGhost} onClick={reset}>Reset</button>
+          <button className={styles.btnStorage} onClick={() => setStorageCount(c => c + 8)}>
+            + Storage ×8
+          </button>
+          <button className={styles.btnCode} onClick={() => setCodeCount(c => c + 16)}>
+            + Code ×16
+          </button>
+        </div>
       </div>
 
     </div>
