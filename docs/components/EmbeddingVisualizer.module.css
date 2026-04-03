@@ -1,0 +1,351 @@
+/* ── Widget shell ──────────────────────────────────────────────────────────── */
+.widget {
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
+  font-size: 13px;
+  color: #c9d1d9;
+  overflow: hidden;
+  margin: 24px 0;
+}
+
+/* ── Account header bar ────────────────────────────────────────────────────── */
+.accountBar {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 8px 12px;
+  border-bottom: 1px solid #30363d;
+  background: #0d1117;
+}
+
+.accountRow {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.acctLabel {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #6e7681;
+  min-width: 44px;
+  flex-shrink: 0;
+}
+
+.acctAddr {
+  font-size: 11px;
+  color: #8b949e;
+  word-break: break-all;
+}
+
+.acctStem {
+  font-size: 11px;
+  color: #79c0ff;
+}
+
+/* ── Main two-column layout ────────────────────────────────────────────────── */
+.mainRow {
+  display: flex;
+  border-bottom: 1px solid #30363d;
+}
+
+/* ── Shared panel styles ───────────────────────────────────────────────────── */
+.panelHeader {
+  padding: 6px 12px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #8b949e;
+  border-bottom: 1px solid #30363d;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.panelNote {
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  color: #6e7681;
+  font-size: 10px;
+}
+
+/* ── Grid panel ────────────────────────────────────────────────────────────── */
+.gridPanel {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #30363d;
+  flex-shrink: 0;
+}
+
+.gridWrap {
+  padding: 12px 12px 8px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(16, 1fr);
+  gap: 2px;
+  width: 248px;
+}
+
+/* ── Grid cells ────────────────────────────────────────────────────────────── */
+.cell {
+  aspect-ratio: 1 / 1;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: filter 0.08s, outline 0.08s;
+}
+
+.regionReserved {
+  cursor: default;
+}
+
+/* Filled colors */
+.regionBasicData.cellFilled { background: #79c0ff; }
+.regionCodeHash.cellFilled  { background: #388bfd; }
+.regionReserved             { background: #161b22; }
+.regionStorage.cellFilled   { background: #e3b341; }
+.regionCode.cellFilled      { background: #3fb950; }
+
+/* Empty colors */
+.regionBasicData.cellEmpty { background: rgba(121,192,255,0.25); }
+.regionCodeHash.cellEmpty  { background: rgba(56,139,253,0.25); }
+.regionStorage.cellEmpty   { background: rgba(227,179,65,0.1); }
+.regionCode.cellEmpty      { background: rgba(63,185,80,0.1); }
+
+/* Active (hovered or selected region) */
+.cellActive {
+  filter: brightness(1.35);
+  outline: 1px solid rgba(255,255,255,0.35);
+  outline-offset: -1px;
+  z-index: 1;
+  position: relative;
+}
+
+/* ── Legend ────────────────────────────────────────────────────────────────── */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: 6px 10px 10px;
+}
+
+.legendBtn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 10px;
+  color: #8b949e;
+  padding: 3px 7px;
+  transition: background 0.1s, color 0.1s;
+  white-space: nowrap;
+}
+
+.legendBtn:hover { background: rgba(255,255,255,0.05); color: #c9d1d9; }
+.legendActive    { background: rgba(255,255,255,0.07) !important; color: #c9d1d9 !important; border-color: #30363d !important; }
+.legendReserved  { color: #484f58; }
+.legendReserved:hover { color: #6e7681; }
+
+.legendDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.dotBasicData { background: #79c0ff; }
+.dotCodeHash  { background: #388bfd; }
+.dotReserved  { background: #21262d; border: 1px solid #30363d; }
+.dotStorage   { background: #e3b341; }
+.dotCode      { background: #3fb950; }
+
+/* ── Info panel ────────────────────────────────────────────────────────────── */
+.infoPanel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.infoContent {
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow: auto;
+}
+
+.infoRange {
+  font-size: 11px;
+  color: #8b949e;
+  font-weight: 600;
+}
+
+.infoDesc {
+  font-size: 11px;
+  line-height: 1.65;
+  color: #c9d1d9;
+  margin: 0;
+}
+
+.infoNote {
+  font-size: 11px;
+  line-height: 1.6;
+  color: #8b949e;
+  border-left: 2px solid #30363d;
+  padding-left: 8px;
+  margin: 0;
+}
+
+.infoPrompt {
+  font-size: 11px;
+  line-height: 1.6;
+  color: #484f58;
+  margin: 0;
+}
+
+/* Field table (for basic_data) */
+.fieldTable {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.fieldRow {
+  display: grid;
+  grid-template-columns: 72px 36px 1fr;
+  gap: 4px;
+  font-size: 11px;
+  align-items: baseline;
+}
+
+.fieldName { color: #79c0ff; }
+.fieldSize { color: #6e7681; text-align: right; }
+.fieldVal  { color: #ffa657; padding-left: 6px; }
+
+/* ── Overflow stems ────────────────────────────────────────────────────────── */
+.overflowSection {
+  padding: 10px 12px;
+  border-bottom: 1px solid #30363d;
+}
+
+.overflowTitle {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #8b949e;
+  margin-bottom: 8px;
+}
+
+.overflowList {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.overflowStem {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 11px;
+  flex-wrap: wrap;
+}
+
+.overflowTag {
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 1px 6px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.overflowStemStorage .overflowTag {
+  background: rgba(227,179,65,0.12);
+  color: #e3b341;
+  border: 1px solid rgba(227,179,65,0.25);
+}
+
+.overflowStemCode .overflowTag {
+  background: rgba(63,185,80,0.12);
+  color: #3fb950;
+  border: 1px solid rgba(63,185,80,0.25);
+}
+
+.overflowRange { color: #c9d1d9; }
+.overflowCount { color: #6e7681; }
+
+.overflowKey {
+  font-size: 10px;
+  color: #484f58;
+  flex: 1;
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Controls ──────────────────────────────────────────────────────────────── */
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 8px 12px;
+}
+
+/* ── Buttons ───────────────────────────────────────────────────────────────── */
+.btnGhost {
+  background: transparent;
+  border: 1px solid #30363d;
+  border-radius: 5px;
+  color: #c9d1d9;
+  font-family: inherit;
+  font-size: 12px;
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: border-color 0.12s, background 0.12s;
+}
+.btnGhost:hover { background: rgba(255,255,255,0.05); border-color: #8b949e; }
+
+.btnStorage {
+  background: rgba(227,179,65,0.1);
+  border: 1px solid rgba(227,179,65,0.3);
+  border-radius: 5px;
+  color: #e3b341;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 14px;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.btnStorage:hover { background: rgba(227,179,65,0.18); }
+
+.btnCode {
+  background: rgba(63,185,80,0.1);
+  border: 1px solid rgba(63,185,80,0.3);
+  border-radius: 5px;
+  color: #3fb950;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 14px;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.btnCode:hover { background: rgba(63,185,80,0.18); }

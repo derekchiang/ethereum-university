@@ -1,4 +1,5 @@
 import BinaryTreeVisualizer from '../components/BinaryTreeVisualizer'
+import EmbeddingVisualizer from '../components/EmbeddingVisualizer'
 
 # Chapter 2: The World State
 
@@ -20,6 +21,14 @@ The three forms are:
 
 We will focus on the logical and the commitment form, since the operational form differs by client implementation.
 
+## State in logical form
+
+Logically, the state of Ethereum can be described very simply as a two-tier data structure as described by the following TypeScript code:
+
+```
+```
+
+
 ## Binary State Tree (EIP-7864)
 
 Ethereum is moving toward a new binary tree structure to replace the current hexary Merkle Patricia Trie. The full proposal is described in [EIP-7864](https://eips.ethereum.org/EIPS/eip-7864).
@@ -33,3 +42,19 @@ The visualization below walks through five insertions. Click **Next** to begin i
 > Stems here are 1 byte (8 bits) for visual clarity. EIP-7864 uses 31-byte stems — the algorithm is identical.
 
 <BinaryTreeVisualizer />
+
+## Tree Embedding (EIP-7864)
+
+Rather than storing account data across separate trees, EIP-7864 co-locates everything for an account on a single **stem**. Each of the 256 subindex slots on that stem is assigned a specific role:
+
+- **0x00** — `BASIC_DATA`: version, code size, nonce, and balance packed into one 32-byte leaf
+- **0x01** — `CODE_HASH`: keccak256 of the account's bytecode
+- **0x02 – 0x3F** — Reserved for future protocol use
+- **0x40 – 0x7F** — First 64 storage slots (slots 0–63)
+- **0x80 – 0xFF** — First 128 code chunks (31 bytes of code each)
+
+When a contract has more than 64 storage slots or more than 128 code chunks, the extras spill to **overflow stems** derived from the same address.
+
+The grid below shows all 256 subindices. Use the buttons to fill storage slots and code chunks and watch the overflow stems appear.
+
+<EmbeddingVisualizer />
