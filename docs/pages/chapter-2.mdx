@@ -1,5 +1,6 @@
 import BinaryTreeVisualizer from '../components/BinaryTreeVisualizer'
 import EmbeddingVisualizer from '../components/EmbeddingVisualizer'
+import MerkleVisualizer from '../components/MerkleVisualizer'
 
 # Chapter 2: The World State
 
@@ -25,8 +26,25 @@ We will focus on the logical and the commitment form, since the operational form
 
 Logically, the state of Ethereum can be described very simply as a two-tier data structure as described by the following TypeScript code:
 
+```typescript
+type Account {
+    nonce: UInt;
+    balance: UInt256;
+    code: Bytes;
+    storage: Map<Bytes32, Bytes32>;
+}
+
+type State = Map<Address, Account>;
 ```
-```
+
+## State in commitment form
+
+To appreciate why Ethereum state uses the commitment scheme it does, let's try to design our own commitment scheme.  For example, why don't we just lay out all the data serially in a flat byte array, and then just hash that array?
+
+While we may get determinism that way, we'd be missing out on:
+
+- Very expensive to incrementally update the state
+- Impossible to prove a piece of the state without serving the entire state
 
 
 ## Binary State Tree (EIP-7864)
@@ -58,3 +76,18 @@ When a contract has more than 64 storage slots or more than 128 code chunks, the
 The grid below shows all 256 subindices. Use the buttons to fill storage slots and code chunks and watch the overflow stems appear.
 
 <EmbeddingVisualizer />
+
+## Hash Commitment (Merkleization)
+
+Every time Ethereum's state changes, a compact fingerprint of the entire tree must be included in the block header. That fingerprint — the **state root** — is computed by *merkleizing* the binary tree bottom-up, following four rules:
+
+- **Leaf**: `leaf_hash = hash(value)` — each slot value is hashed on its own.
+- **Stem**: the 256 leaf hashes are first reduced into a binary subtree, then the stem bytes are mixed into an outer hash: `stem_hash = hash(stem ║ 0x00 ║ inner)`.
+- **Internal**: `node_hash = hash(left_hash ║ right_hash)` — hashes bubble up from leaves to root.
+- **Empty**: unset slots and absent branches contribute `0x00 × 32` — no hash call needed.
+
+Changing a single leaf only requires recomputing `O(log n)` hashes along the path from that leaf to the root.
+
+Click any node to see its formula with real SHA-256 values, then use **flip** on a leaf to watch the hash cascade propagate upward.
+
+<MerkleVisualizer />

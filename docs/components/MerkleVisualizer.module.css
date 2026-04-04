@@ -1,0 +1,364 @@
+/* ── Widget shell ──────────────────────────────────────────────────────────── */
+.widget {
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
+  font-size: 13px;
+  color: #c9d1d9;
+  overflow: hidden;
+  margin: 24px 0;
+}
+
+/* ── Two-column layout ─────────────────────────────────────────────────────── */
+.mainRow {
+  display: flex;
+  border-bottom: 1px solid #30363d;
+  min-height: 360px;
+}
+
+.treePanel {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #30363d;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.formulaPanel {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.panelHeader {
+  padding: 6px 12px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #8b949e;
+  border-bottom: 1px solid #30363d;
+  flex-shrink: 0;
+}
+
+.treeScroll,
+.formulaScroll {
+  flex: 1;
+  overflow: auto;
+  padding: 10px 12px;
+}
+
+/* ── Tree nodes ────────────────────────────────────────────────────────────── */
+.internalNode,
+.stemNode {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  border-radius: 4px;
+  padding: 1px;
+}
+
+.internalHeader,
+.stemHeader {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 3px 5px;
+  border-radius: 3px;
+  transition: background 0.1s;
+}
+.internalHeader:hover,
+.stemHeader:hover { background: rgba(255,255,255,0.04); }
+
+/* Node type tags */
+.tagInternal {
+  font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;
+  padding: 1px 5px; border-radius: 3px; flex-shrink: 0;
+  background: rgba(88,166,255,0.1); color: #58a6ff; border: 1px solid rgba(88,166,255,0.22);
+}
+
+.tagStem {
+  font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em;
+  padding: 1px 5px; border-radius: 3px; flex-shrink: 0;
+  background: rgba(63,185,80,0.1); color: #3fb950; border: 1px solid rgba(63,185,80,0.22);
+}
+
+.depthInfo       { font-size: 11px; color: #6e7681; }
+.stemHex         { color: #3fb950; font-size: 12px; }
+.nodeHashPreview { font-size: 10px; color: #484f58; margin-left: auto; flex-shrink: 0; }
+
+/* ── Leaf rows ─────────────────────────────────────────────────────────────── */
+.leafRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 5px 2px 24px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+.leafRow:hover { background: rgba(255,255,255,0.04); }
+
+.leafSub         { font-size: 10px; color: #8b949e; flex-shrink: 0; }
+.leafVal         { font-size: 11px; color: #ffa657; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.leafHashPreview { font-size: 10px; color: #484f58; flex-shrink: 0; }
+
+.leafFlipped .leafVal { color: #e3b341; }
+
+/* ── Branch connectors ─────────────────────────────────────────────────────── */
+.branches {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-left: 10px;
+  padding-left: 10px;
+  border-left: 1px solid #21262d;
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
+.branch { display: flex; align-items: flex-start; gap: 7px; }
+
+.branchBit {
+  font-size: 10px; font-weight: 700;
+  padding: 1px 5px; border-radius: 3px;
+  flex-shrink: 0; margin-top: 2px; line-height: 1.4;
+}
+.bit0 { background: rgba(88,166,255,0.1); color: #58a6ff; border: 1px solid rgba(88,166,255,0.22); }
+.bit1 { background: rgba(255,166,87,0.1); color: #ffa657; border: 1px solid rgba(255,166,87,0.22); }
+
+.branchBody { flex: 1; min-width: 0; }
+
+/* ── Selection states ──────────────────────────────────────────────────────── */
+.selInternal {
+  outline: 2px solid rgba(88,166,255,0.5);
+  outline-offset: 1px;
+  border-radius: 4px;
+}
+
+.selStem {
+  outline: 2px solid rgba(63,185,80,0.5);
+  outline-offset: 1px;
+  border-radius: 4px;
+}
+
+.selLeaf {
+  background: rgba(63,185,80,0.08) !important;
+  outline: 1px solid rgba(63,185,80,0.3);
+  outline-offset: -1px;
+  border-radius: 3px;
+}
+
+/* ── Cascade animation ─────────────────────────────────────────────────────── */
+@keyframes cascadePulse {
+  0%   { box-shadow: 0 0 0 2px rgba(227,179,65,0.65); background: rgba(227,179,65,0.10); }
+  60%  { box-shadow: 0 0 0 2px rgba(227,179,65,0.20); background: rgba(227,179,65,0.04); }
+  100% { box-shadow: none; background: transparent; }
+}
+
+.cascading {
+  animation: cascadePulse 0.5s ease-out forwards;
+  border-radius: 4px;
+}
+
+/* ── Flip button ───────────────────────────────────────────────────────────── */
+.btnFlip {
+  background: transparent;
+  border: 1px solid #30363d;
+  border-radius: 3px;
+  color: #8b949e;
+  font-family: inherit;
+  font-size: 9px;
+  padding: 1px 5px;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-left: auto;
+  transition: border-color 0.1s, color 0.1s;
+}
+.btnFlip:hover { border-color: #e3b341; color: #e3b341; }
+
+/* ── Formula panel ─────────────────────────────────────────────────────────── */
+.fPrompt {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fPrompt p {
+  font-size: 11px;
+  color: #6e7681;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.fSummary {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 8px 10px;
+  background: #161b22;
+  border: 1px solid #21262d;
+  border-radius: 4px;
+}
+
+.fSummaryRow {
+  display: flex;
+  gap: 10px;
+  font-size: 11px;
+  align-items: baseline;
+}
+
+.fSummaryLabel {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6e7681;
+  min-width: 56px;
+  flex-shrink: 0;
+}
+
+.fSummaryFormula { color: #8b949e; }
+
+.fBox {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fTitle {
+  font-size: 11px;
+  font-weight: 600;
+  color: #c9d1d9;
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+}
+
+.fTitleSub { color: #3fb950; font-weight: 400; }
+
+/* Code-like formula expression */
+.fExpr {
+  padding: 7px 10px;
+  background: #161b22;
+  border: 1px solid #21262d;
+  border-radius: 4px;
+  font-size: 12px;
+  line-height: 1.8;
+  word-break: break-word;
+}
+
+/* Numbered step rows for StemNode */
+.fStepWrap {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.fStepN {
+  font-size: 13px;
+  color: #6e7681;
+  flex-shrink: 0;
+  padding-top: 18px;  /* aligns with fStepLabel */
+}
+
+.fStepLabel {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6e7681;
+  margin-bottom: 4px;
+}
+
+/* Value table */
+.fRows {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fRow {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 11px;
+}
+
+.fRowLabel {
+  font-size: 10px;
+  color: #6e7681;
+  min-width: 74px;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.fSectionLabel {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: #6e7681;
+  border-top: 1px solid #21262d;
+  padding-top: 6px;
+}
+
+.fNote {
+  font-size: 11px;
+  line-height: 1.65;
+  color: #6e7681;
+  border-left: 2px solid #30363d;
+  padding-left: 8px;
+  margin: 0;
+}
+
+.fNote em {
+  color: #c9d1d9;
+  font-style: normal;
+  font-weight: 600;
+}
+
+/* ── Formula color tokens ──────────────────────────────────────────────────── */
+.farg1    { color: #79c0ff; }          /* left hash / leaf value */
+.farg2    { color: #ffa657; }          /* right hash */
+.farg3    { color: #d2a8ff; }          /* stem bytes */
+.farg4    { color: #3fb950; }          /* inner hash */
+.fvResult { color: #3fb950; font-weight: 600; }
+.fzero    { color: #6e7681; }          /* 0x00 separator */
+.ffn      { color: #e3b341; }          /* hash() function name */
+.fop      { color: #6e7681; }          /* punctuation ║ ( ) = */
+
+/* ── Controls ──────────────────────────────────────────────────────────────── */
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+}
+
+.hint { flex: 1; font-size: 10px; color: #484f58; }
+
+.btnGhost {
+  background: transparent;
+  border: 1px solid #30363d;
+  border-radius: 5px;
+  color: #c9d1d9;
+  font-family: inherit;
+  font-size: 12px;
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: border-color 0.12s, background 0.12s;
+}
+.btnGhost:hover { background: rgba(255,255,255,0.05); border-color: #8b949e; }
+
+/* ── Scrollbars ────────────────────────────────────────────────────────────── */
+.treeScroll::-webkit-scrollbar,
+.formulaScroll::-webkit-scrollbar { width: 4px; height: 4px; }
+.treeScroll::-webkit-scrollbar-track,
+.formulaScroll::-webkit-scrollbar-track { background: transparent; }
+.treeScroll::-webkit-scrollbar-thumb,
+.formulaScroll::-webkit-scrollbar-thumb { background: #30363d; border-radius: 2px; }
